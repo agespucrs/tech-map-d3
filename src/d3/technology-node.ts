@@ -2,13 +2,13 @@ import appendIcon from "./icon"
 import { randomColor } from "./util"
 import { Node, InternalTechnology } from "./types";
 
-export interface TecnologyNode extends Node, InternalTechnology {}
+export interface TechnologyNode extends Node, InternalTechnology {}
 
 export default function appendTechnologyNodes(
   container: d3.Selection<any, any, any, any>, 
-  technologyNodes: TecnologyNode[], 
+  technologyNodes: TechnologyNode[], 
   projectCountMap: { [technologyId: number]: number },
-  onClick: (event: MouseEvent, d: TecnologyNode)=>void,
+  onClick: (event: MouseEvent, d: TechnologyNode)=>void,
   opts: {
     circleSize: number,
     rainbowLinks: boolean,
@@ -45,7 +45,7 @@ export default function appendTechnologyNodes(
     .attr('fill', opts.technologyBackgroundColor)
     .style('pointer-events', 'none')
   
-  appendIcon<TecnologyNode>(tNode, {
+  appendIcon<TechnologyNode>(tNode, {
     size: opts.circleSize,
     rainbowColor: opts.rainbowLinks,
     color: opts.technologyStrokeColor,

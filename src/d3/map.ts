@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import appendPracticeNodes, { PracticeNode } from "./practice-node";
 import appendProjectNodes, { ProjectNode } from "./project-node";
-import appendTechnologyNodes, { TecnologyNode } from "./technology-node";
+import appendTechnologyNodes, { TechnologyNode } from "./technology-node";
 import { appendTooltip } from "./tooltip";
 import appendLinkNodes from "./link-node";
 import { drag, seedRand } from "./util";
@@ -41,9 +41,9 @@ export function renderMap(projects: InputProject[], opts: ProjectMapOptions) {
   const technologyIdMapper: {[technology_id: number]: number} = {};
   const practicesIdMapper: {[practice_id: number]: number} = {};
 
-  const inputTecnologies = projects.reduce((a, p) => a.concat(p.technologies), [] as InputTechnology[]);
-  const uniqueInputTechnologies: InputTechnology[] = Object.values(inputTecnologies.reduce((acc,cur)=>Object.assign(acc,{[cur.technologyId]:cur}),{}));
-  const tecnologies: InternalTechnology[] = uniqueInputTechnologies.map(technology => ({
+  const inputTechnologies = projects.reduce((a, p) => a.concat(p.technologies), [] as InputTechnology[]);
+  const uniqueInputTechnologies: InputTechnology[] = Object.values(inputTechnologies.reduce((acc,cur)=>Object.assign(acc,{[cur.technologyId]:cur}),{}));
+  const technologies: InternalTechnology[] = uniqueInputTechnologies.map(technology => ({
     ...technology,
     projects: projects.filter(project => project.technologies.find(t => t.technologyId === technology.technologyId))
   }));
@@ -68,7 +68,7 @@ export function renderMap(projects: InputProject[], opts: ProjectMapOptions) {
   }))
 
   const projectNodes: ProjectNode[] = projects.map(x => ({...x, id: id++}));
-  const technologyNodes: TecnologyNode[] = tecnologies.map(x => ({...x, id: id++}));
+  const technologyNodes: TechnologyNode[] = technologies.map(x => ({...x, id: id++}));
   const practiceNodes: PracticeNode[] = practices.map(x => ({...x, id: id++}));
   projectNodes.map(x => projectIdMapper[x.projectId] = x.id);
   technologyNodes.map(x => technologyIdMapper[x.technologyId] = x.id);
@@ -99,7 +99,7 @@ export function renderMap(projects: InputProject[], opts: ProjectMapOptions) {
       source: projectIdMapper[p.projectId],
       target: practicesIdMapper[t.practiceId],
     })) : []
-  ), [] as {source: number, target: number}[]) as unknown as {source: ProjectNode, target: TecnologyNode & PracticeNode}[];
+  ), [] as {source: number, target: number}[]) as unknown as {source: ProjectNode, target: TechnologyNode & PracticeNode}[];
 
   const N = d3.map(nodes, d => d.id);
 
