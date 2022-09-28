@@ -34,7 +34,7 @@ export default function appendTechnologyNodes(
     .attr('cx', opts.circleSize / 2)
     .attr('cy', opts.circleSize / 2)
     .attr('r', opts.circleSize / 2)
-    .attr('fill', d => opts.rainbowLinks ? randomColor(d.id) : opts.technologyStrokeColor)
+    .attr('fill', d => opts.rainbowLinks ? randomColor(d.technologyId) : opts.technologyStrokeColor)
     .on('click', onClick)
   
   tNode
