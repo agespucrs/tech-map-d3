@@ -11,6 +11,8 @@ declare global {
             accept: ()=>void;
         }
     }
+    
+    module '*.module.css';
 }
 
 export {}

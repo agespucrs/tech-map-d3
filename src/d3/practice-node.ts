@@ -1,8 +1,8 @@
-import { Practice } from "../models/practice"
 import appendIcon from "./icon"
-import { Node, randomColor } from "./util"
+import { Node, InternalPractice } from "./types"
+import { randomColor } from "./util"
 
-export interface PracticeNode extends Node, Practice {}
+export interface PracticeNode extends Node, InternalPractice {}
 
 export default function appendPracticeNodes(
   container: d3.Selection<any, any, any, any>, 

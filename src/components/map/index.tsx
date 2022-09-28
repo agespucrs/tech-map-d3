@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { renderMap } from "../../d3/map";
-import { Project } from "../../models/project";
+import { InputProject } from "../../d3/types";
+import styles from "./index.module.css";
 
 export function Map() {
     useEffect(() => {
-        const projects: Project[] = [
+        const projects: InputProject[] = [
             {
                 projectId: 1,
                 name: 'P1',
@@ -17,9 +18,7 @@ export function Map() {
                         description: 'Practice 1 description',
                         imageLink: 'https://cdn-icons-png.flaticon.com/512/5968/5968381.png',
                         links: 'https://www.typescriptlang.org/',
-                        project_practices: { projectId: 1 },
-                        projects: [],
-                    }
+                    },
                 ],
                 technologies: [
                     {
@@ -28,9 +27,38 @@ export function Map() {
                         description: 'Tecnologia 1 description',
                         imageLink: 'https://cdn-icons-png.flaticon.com/512/5968/5968381.png',
                         links: 'https://www.typescriptlang.org/',
-                        project_technologies: { projectId: 1 },
-                        projects: [],
-                    }
+                    },
+                    {
+                        technologyId: 2,
+                        name: 'Tecnologia 2',
+                        description: 'Tecnologia 2 description',
+                        imageLink: 'https://cdn-icons-png.flaticon.com/512/5968/5968381.png',
+                        links: 'https://www.typescriptlang.org/',
+                    },
+                ],
+            },
+            {
+                projectId: 2,
+                name: 'P2',
+                description: 'PD2',
+                link: 'P2',
+                practices: [
+                    {
+                        practiceId: 1,
+                        name: 'Practice 1',
+                        description: 'Practice 1 description',
+                        imageLink: 'https://cdn-icons-png.flaticon.com/512/5968/5968381.png',
+                        links: 'https://www.typescriptlang.org/',
+                    },
+                ],
+                technologies: [
+                    {
+                        technologyId: 2,
+                        name: 'Tecnologia 2',
+                        description: 'Tecnologia 2 description',
+                        imageLink: 'https://cdn-icons-png.flaticon.com/512/5968/5968381.png',
+                        links: 'https://www.typescriptlang.org/',
+                    },
                 ],
             },
         ];
@@ -61,5 +89,5 @@ export function Map() {
         });
     }, []);
 
-    return <div id="div-project-map-graph" />
+    return <div className={styles.container} id="div-project-map-graph" />
 }

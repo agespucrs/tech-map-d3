@@ -1,13 +1,11 @@
 import * as d3 from 'd3';
-import { Practice } from "../models/practice";
-import { Project } from "../models/project";
-import { Technology } from "../models/technology";
 import appendPracticeNodes, { PracticeNode } from "./practice-node";
 import appendProjectNodes, { ProjectNode } from "./project-node";
 import appendTechnologyNodes, { TecnologyNode } from "./technology-node";
 import { appendTooltip } from "./tooltip";
 import appendLinkNodes from "./link-node";
-import { drag, Node, seedRand } from "./util";
+import { drag, seedRand } from "./util";
+import { InputPractice, InputProject, InputTechnology, InternalPractice, InternalTechnology, Node } from "./types";
 
 export interface ProjectMapOptions {
 	elemId: string;
@@ -35,7 +33,7 @@ export interface ProjectMapOptions {
 	startTechPractsRandomPosition: boolean;
 }
 
-export function renderMap(projects: Project[], opts: ProjectMapOptions) {
+export function renderMap(projects: InputProject[], opts: ProjectMapOptions) {
   // Prepare data
 
   let id = 0;
@@ -43,10 +41,19 @@ export function renderMap(projects: Project[], opts: ProjectMapOptions) {
   const technologyIdMapper: {[technology_id: number]: number} = {};
   const practicesIdMapper: {[practice_id: number]: number} = {};
 
-  const tecnologies: Technology[] = projects.filter(p => p.technologies).reduce((a, p) => a.concat(p.technologies), [] as Technology[]);
-  const uniqueTechnologies: Technology[] = Object.values(tecnologies.reduce((acc,cur)=>Object.assign(acc,{[cur.technologyId]:cur}),{}));
-  const practices: Practice[] = projects.filter(p => p.practices).reduce((a, p) => a.concat(p.practices), [] as Practice[]);
-  const uniquePractices: Practice[] = Object.values(practices.reduce((acc,cur)=>Object.assign(acc,{[cur.practiceId]:cur}),{}));
+  const inputTecnologies = projects.reduce((a, p) => a.concat(p.technologies), [] as InputTechnology[]);
+  const uniqueInputTechnologies: InputTechnology[] = Object.values(inputTecnologies.reduce((acc,cur)=>Object.assign(acc,{[cur.technologyId]:cur}),{}));
+  const tecnologies: InternalTechnology[] = uniqueInputTechnologies.map(technology => ({
+    ...technology,
+    projects: projects.filter(project => project.technologies.find(t => t.technologyId === technology.technologyId))
+  }));
+
+  const inputPractices = projects.reduce((a, p) => a.concat(p.practices), [] as InputPractice[]);
+  const uniqueInputPractices: InputPractice[] = Object.values(inputPractices.reduce((acc,cur)=>Object.assign(acc,{[cur.practiceId]:cur}),{}));
+  const practices: InternalPractice[] = uniqueInputPractices.map(practice => ({
+    ...practice,
+    projects: projects.filter(project => project.practices.find(t => t.practiceId === practice.practiceId))
+  }));
 
   const projectTechCountMap: {[id: number]: number} = {};
   projects.filter(p => p.technologies).forEach(p => p.technologies.forEach(t => {
@@ -61,8 +68,8 @@ export function renderMap(projects: Project[], opts: ProjectMapOptions) {
   }))
 
   const projectNodes: ProjectNode[] = projects.map(x => ({...x, id: id++}));
-  const technologyNodes: TecnologyNode[] = uniqueTechnologies.map(x => ({...x, id: id++}));
-  const practiceNodes: PracticeNode[] = uniquePractices.map(x => ({...x, id: id++}));
+  const technologyNodes: TecnologyNode[] = tecnologies.map(x => ({...x, id: id++}));
+  const practiceNodes: PracticeNode[] = practices.map(x => ({...x, id: id++}));
   projectNodes.map(x => projectIdMapper[x.projectId] = x.id);
   technologyNodes.map(x => technologyIdMapper[x.technologyId] = x.id);
   practiceNodes.map(x => practicesIdMapper[x.practiceId] = x.id);
@@ -84,12 +91,12 @@ export function renderMap(projects: Project[], opts: ProjectMapOptions) {
   const links = projects
   .reduce((a, p) => a.concat(
     p.technologies ? p.technologies.map(t => ({
-      source: projectIdMapper[t.project_technologies.projectId],
+      source: projectIdMapper[p.projectId],
       target: technologyIdMapper[t.technologyId],
     })) : []
   ).concat(
     p.practices ? p.practices.map(t => ({
-      source: projectIdMapper[t.project_practices.projectId],
+      source: projectIdMapper[p.projectId],
       target: practicesIdMapper[t.practiceId],
     })) : []
   ), [] as {source: number, target: number}[]) as unknown as {source: ProjectNode, target: TecnologyNode & PracticeNode}[];
@@ -258,7 +265,7 @@ export function renderMap(projects: Project[], opts: ProjectMapOptions) {
     opts,
   );
   
-  function unhighlighted(d: Project, cb: (x: d3.Selection<any, any, any, any>) => void) {
+  function unhighlighted(d: InputProject, cb: (x: d3.Selection<any, any, any, any>) => void) {
     cb(linksNode.selectAll('line:not([project="' + d.projectId + '"])'));
     cb(projectsNode.selectAll('svg:not([project="' + d.projectId + '"])'));
     cb(technologiesNode.selectAll(d.technologies && d.technologies.length > 0 ?

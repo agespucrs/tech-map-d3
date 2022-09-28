@@ -1,7 +1,6 @@
-import { Project } from "../models/project";
-import { Node } from "./util";
+import { Node, InputProject } from "./types";
 
-export interface ProjectNode extends Node, Project {}
+export interface ProjectNode extends Node, InputProject {}
 
 export default function appendProjectNodes(
   container: d3.Selection<any, any, any, any>, 

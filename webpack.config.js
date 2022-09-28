@@ -28,6 +28,10 @@ module.exports = {
                 loader: 'html-loader'
             },
             {
+                test: /\.css$/i,
+                use: ["style-loader", "css-loader"],
+            },
+            {
                 test: /\.(jsx|js|tsx|ts)$/,
                 exclude: /node_modules/,
                 use: [{

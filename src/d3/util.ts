@@ -1,8 +1,7 @@
-import { Simulation, SimulationNodeDatum } from "d3";
-
-export interface Node extends SimulationNodeDatum {id: number}
+import { Simulation } from "d3";
 
 import * as d3 from 'd3';
+import { Node } from "./types";
 		
 export function randomColor(seed: number) {
   return 'hsl(' + (1 + seedRand(seed.toString()) * (359)) + ',100%,40%)';

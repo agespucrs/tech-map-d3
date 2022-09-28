@@ -1,8 +1,8 @@
-import { Technology } from "../models/technology"
 import appendIcon from "./icon"
-import { Node, randomColor } from "./util"
+import { randomColor } from "./util"
+import { Node, InternalTechnology } from "./types";
 
-export interface TecnologyNode extends Node, Technology {}
+export interface TecnologyNode extends Node, InternalTechnology {}
 
 export default function appendTechnologyNodes(
   container: d3.Selection<any, any, any, any>, 
