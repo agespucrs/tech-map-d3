@@ -41,6 +41,7 @@ jobs:
         run: |
           npm ci
           npm run build:lib
+          cp README.md build/README.md
           cp package.json build/package.json
 
       - name: Deploy
