@@ -9,6 +9,7 @@ module.exports = {
     entry: path.resolve(__dirname, 'src', 'index.tsx'),
     output: {
         path: path.resolve(__dirname, 'build'),
+        publicPath: isDevelopment ? '/' : '/tech-map-d3',
         filename: 'bundle.js'
     },
     devServer: {
@@ -44,16 +45,14 @@ module.exports = {
                             '@babel/preset-react',
                             "@babel/preset-typescript"
                         ],
-                        plugins: [
-                            ...[isDevelopment && require.resolve('react-refresh/babel')],
-                        ],
+                        plugins: isDevelopment ? [require.resolve('react-refresh/babel')] : undefined,
                     }
                 }]
             }
         ]
     },
     plugins: [
-        ...[isDevelopment && new ReactRefreshWebpackPlugin()],
+        ...(isDevelopment ? [new ReactRefreshWebpackPlugin()] : []),
         new HtmlWebpackPlugin({
             template: 'public/index.html'
         }),
