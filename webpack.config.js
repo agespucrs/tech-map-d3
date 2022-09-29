@@ -10,7 +10,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, 'build'),
         publicPath: isDevelopment ? '/' : '/tech-map-d3',
-        filename: 'bundle.js'
+        filename: 'bundle.[hash].js'
     },
     devServer: {
         static: {
