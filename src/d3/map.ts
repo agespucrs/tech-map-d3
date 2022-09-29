@@ -174,6 +174,7 @@ export function renderMap(projects: InputProject[], inOpts: ProjectMapOptions) {
   const content = container
   .append('div')
     .style('position', 'relative')
+    .style('width', '100%')
     .style('overflow', 'hidden');
 
   const tooltip = appendTooltip(content);
