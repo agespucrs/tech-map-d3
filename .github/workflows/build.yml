@@ -44,7 +44,7 @@ jobs:
           cp README.md build/README.md
           cp package.json build/package.json
 
-      - name: Deploy
+      - name: Publish
         run: |
           cd build
           npm publish

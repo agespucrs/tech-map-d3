@@ -7,7 +7,16 @@ Biblioteca para visualizar a relação de tecnologias, práticas e projetos em u
 
 ## Uso
 
-Basta chamar a função `renderMap` para renderizar o mapa.
+Basta chamar a função `renderMap` para renderizar o mapa em um elemento já existente na página.
+
+Deve ser criada uma `div` com algum id de sua escolha.
+
+```ts
+import { renderMap } from 'tech-map-d3';
+const projects = [...projetos aqui];
+const options = {elemId: 'id-de-sua-preferencia', ...outras opções};
+renderMap(projects, options);
+```
 
 ## Mapa
 
