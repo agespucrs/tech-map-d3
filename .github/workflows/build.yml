@@ -35,7 +35,7 @@ jobs:
           cp package.json build/package.json
 
       - name: Deploy
-      - run: |
+        run: |
           cd build
           npm publish
         env:
