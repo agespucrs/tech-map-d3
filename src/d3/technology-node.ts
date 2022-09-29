@@ -10,8 +10,8 @@ export default function appendTechnologyNodes(
   projectCountMap: { [technologyId: number]: number },
   onClick: (event: MouseEvent, d: TechnologyNode)=>void,
   opts: {
-    circleSize: number,
-    rainbowLinks: boolean,
+    nodeSize: number,
+    rainbowStrokes: boolean,
     technologyStrokeColor: string,
     technologyStrokeWidth: number,
     technologyBackgroundColor: string,
@@ -24,30 +24,30 @@ export default function appendTechnologyNodes(
   .data(technologyNodes)
   .enter()
   .append('svg')
-    .attr('width', opts.circleSize)
-    .attr('height', opts.circleSize)
+    .attr('width', opts.nodeSize)
+    .attr('height', opts.nodeSize)
     .attr('technology', d => d.technologyId)
     .style('overflow', 'auto')
 
   tNode
   .append('circle')
-    .attr('cx', opts.circleSize / 2)
-    .attr('cy', opts.circleSize / 2)
-    .attr('r', opts.circleSize / 2)
-    .attr('fill', d => opts.rainbowLinks ? randomColor(d.technologyId) : opts.technologyStrokeColor)
+    .attr('cx', opts.nodeSize / 2)
+    .attr('cy', opts.nodeSize / 2)
+    .attr('r', opts.nodeSize / 2)
+    .attr('fill', d => opts.rainbowStrokes ? randomColor(d.technologyId) : opts.technologyStrokeColor)
     .on('click', onClick)
   
   tNode
   .append('circle')
-    .attr('cx', opts.circleSize / 2)
-    .attr('cy', opts.circleSize / 2)
-    .attr('r', opts.circleSize / 2 - opts.technologyStrokeWidth)
+    .attr('cx', opts.nodeSize / 2)
+    .attr('cy', opts.nodeSize / 2)
+    .attr('r', opts.nodeSize / 2 - opts.technologyStrokeWidth)
     .attr('fill', opts.technologyBackgroundColor)
     .style('pointer-events', 'none')
   
   appendIcon<TechnologyNode>(tNode, {
-    size: opts.circleSize,
-    rainbowColor: opts.rainbowLinks,
+    size: opts.nodeSize,
+    rainbowColor: opts.rainbowStrokes,
     color: opts.technologyStrokeColor,
     imageLink: d => d.imageLink,
     id: d => d.technologyId,
@@ -59,8 +59,8 @@ export default function appendTechnologyNodes(
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'hanging')
     .attr('font-size', 10)
-    .attr('x', opts.circleSize / 2)
-    .attr('y', opts.circleSize+2)
+    .attr('x', opts.nodeSize / 2)
+    .attr('y', opts.nodeSize+2)
     .style('fill', opts.technologyNameColor)
     .style('pointer-events', 'none')
     .text(d => d.name)
@@ -71,8 +71,8 @@ export default function appendTechnologyNodes(
     .attr('dominant-baseline', 'hanging')
     .attr('font-size', 10)
     .attr('font-weight', 'bold')
-    .attr('x', (_, i) => 4 + opts.circleSize / 2 + nameNode.nodes()[i].getComputedTextLength() / 2)
-    .attr('y', opts.circleSize+2)
+    .attr('x', (_, i) => 4 + opts.nodeSize / 2 + nameNode.nodes()[i].getComputedTextLength() / 2)
+    .attr('y', opts.nodeSize+2)
     .style('fill', opts.technologyCounterColor)
     .style('pointer-events', 'none')
     .text(d => '(' + projectCountMap[d.technologyId] + ')')

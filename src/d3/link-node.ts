@@ -7,7 +7,7 @@ export default function appendLinkNodes(
   container: d3.Selection<any, any, any, any>, 
   links: {source: ProjectNode, target: TechnologyNode & PracticeNode}[],
   opts: {
-    rainbowLinks: boolean,
+    rainbowStrokes: boolean,
     technologyStrokeColor: string,
     practiceStrokeColor: string,
   }
@@ -20,7 +20,7 @@ export default function appendLinkNodes(
     .attr('project', d => d.source.projectId)
     .attr('technology', d => d.target.technologyId)
     .attr('practice', d => d.target.practiceId)
-    .style('stroke', d => opts.rainbowLinks ? randomColor(
+    .style('stroke', d => opts.rainbowStrokes ? randomColor(
       d.target.technologyId != null
       ? d.target.technologyId 
       : d.target.practiceId

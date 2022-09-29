@@ -13,13 +13,13 @@ export default function appendProjectNodes(
     projectTextColor: string,
     projectStrokeColor: string,
     projectBackgroundColor: string,
-    showTechnologiesCount: boolean,
-    showPracticesCount: boolean,
+    projectShowTechnologiesCount: boolean,
+    projectShowPracticesCount: boolean,
   }
 ) {
   let height = 16;
-  if (opts.showTechnologiesCount) height += 16;
-  if (opts.showPracticesCount) height += 16;
+  if (opts.projectShowTechnologiesCount) height += 16;
+  if (opts.projectShowPracticesCount) height += 16;
 
   const pNode = container
     .selectAll('image')
@@ -57,7 +57,7 @@ export default function appendProjectNodes(
     .text(d => d.name);
 
   let curY = 20;
-  if (opts.showTechnologiesCount) {
+  if (opts.projectShowTechnologiesCount) {
     pNode
     .append('text')
       .attr('text-anchor', 'hanging')
@@ -71,7 +71,7 @@ export default function appendProjectNodes(
     curY += 16;
   }
   
-  if (opts.showPracticesCount) {
+  if (opts.projectShowPracticesCount) {
     pNode
     .append('text')
       .attr('text-anchor', 'hanging')

@@ -10,8 +10,8 @@ export default function appendPracticeNodes(
   projectCountMap: { [practiceId: number]: number },
   onClick: (event: MouseEvent, d: PracticeNode)=>void,
   opts: {
-    circleSize: number,
-    rainbowLinks: boolean,
+    nodeSize: number,
+    rainbowStrokes: boolean,
     practiceStrokeColor: string,
     practiceStrokeWidth: number,
     practiceBackgroundColor: string,
@@ -24,8 +24,8 @@ export default function appendPracticeNodes(
   .data(practiceNodes)
   .enter()
   .append('svg')
-    .attr('width', opts.circleSize)
-    .attr('height', opts.circleSize)
+    .attr('width', opts.nodeSize)
+    .attr('height', opts.nodeSize)
     .attr('practice', d => d.practiceId)
     .style('overflow', 'auto')
 
@@ -33,23 +33,23 @@ export default function appendPracticeNodes(
   .append('rect')
     .attr('x', 0)
     .attr('y', 0)
-    .attr('width', opts.circleSize)
-    .attr('height', opts.circleSize)
-    .attr('fill', d => opts.rainbowLinks ? randomColor(d.practiceId) : opts.practiceStrokeColor)
+    .attr('width', opts.nodeSize)
+    .attr('height', opts.nodeSize)
+    .attr('fill', d => opts.rainbowStrokes ? randomColor(d.practiceId) : opts.practiceStrokeColor)
     .on('click', onClick)
   
   prNode
   .append('rect')
     .attr('x', opts.practiceStrokeWidth)
     .attr('y', opts.practiceStrokeWidth)
-    .attr('width', opts.circleSize - opts.practiceStrokeWidth * 2)
-    .attr('height', opts.circleSize - opts.practiceStrokeWidth * 2)
+    .attr('width', opts.nodeSize - opts.practiceStrokeWidth * 2)
+    .attr('height', opts.nodeSize - opts.practiceStrokeWidth * 2)
     .attr('fill', opts.practiceBackgroundColor)
     .style('pointer-events', 'none')
   
   appendIcon<PracticeNode>(prNode, {
-    size: opts.circleSize,
-    rainbowColor: opts.rainbowLinks,
+    size: opts.nodeSize,
+    rainbowColor: opts.rainbowStrokes,
     color: opts.practiceStrokeColor,
     imageLink: d => d.imageLink,
     id: d => d.practiceId,
@@ -61,8 +61,8 @@ export default function appendPracticeNodes(
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'hanging')
     .attr('font-size', 10)
-    .attr('x', opts.circleSize / 2)
-    .attr('y', opts.circleSize+2)
+    .attr('x', opts.nodeSize / 2)
+    .attr('y', opts.nodeSize+2)
     .style('fill', opts.practiceNameColor)
     .style('pointer-events', 'none')
     .text(d => d.name)
@@ -73,8 +73,8 @@ export default function appendPracticeNodes(
     .attr('dominant-baseline', 'hanging')
     .attr('font-size', 10)
     .attr('font-weight', 'bold')
-    .attr('x', (_, i) => 4 + opts.circleSize / 2 + nameNode.nodes()[i].getComputedTextLength() / 2)
-    .attr('y', opts.circleSize+2)
+    .attr('x', (_, i) => 4 + opts.nodeSize / 2 + nameNode.nodes()[i].getComputedTextLength() / 2)
+    .attr('y', opts.nodeSize+2)
     .style('fill', opts.practiceCounterColor)
     .style('pointer-events', 'none')
     .text(d => '(' + projectCountMap[d.practiceId] + ')')

@@ -7,33 +7,70 @@ import appendLinkNodes from "./link-node";
 import { drag, seedRand } from "./util";
 import { InputPractice, InputProject, InputTechnology, InternalPractice, InternalTechnology, Node } from "./types";
 
+const defaultOptions = {
+  nodeSize: 50,
+  startTechPractsRandomPosition: true,
+  maxZoomOutFactor: 1.3,
+  rainbowStrokes: true,
+
+  linkStrokeWidth: 1,
+  
+  projectStrokeWidth: 1,
+  projectStrokeColor: '#fff',
+  projectBackgroundColor: '#3C5DAA',
+  projectTextColor: '#fff',
+  projectEachOtherDistance: 10,
+  projectMinRadius: 200,
+  projectShowTechnologiesCount: true,
+  projectShowPracticesCount: true,
+  
+  technologyStrokeWidth: 1,
+  technologyStrokeColor: '#888',
+  technologyBackgroundColor: '#fff',
+  technologyNameColor: '#000',
+  technologyCounterColor: '#EB8023',
+  
+  practiceStrokeWidth: 1,
+  practiceStrokeColor: '#888',
+  practiceBackgroundColor: '#fff',
+  practiceNameColor: '#000',
+  practiceCounterColor: '#EB8023',
+};
+
 export interface ProjectMapOptions {
 	elemId: string;
-	circleSize: number;
-	linkStrokeWidth: number;
-	rainbowLinks: boolean;
-	projectStrokeWidth: number;
-	projectStrokeColor: string;
-	projectBackgroundColor: string;
-	projectTextColor: string;
-	technologyStrokeWidth: number;
-	technologyStrokeColor: string;
-	technologyBackgroundColor: string;
-	technologyNameColor: string,
-	technologyCounterColor: string,
-	practiceStrokeColor: string,
-	practiceStrokeWidth: number,
-	practiceBackgroundColor: string,
-	practiceNameColor: string,
-	practiceCounterColor: string,
-	projectsPosRadius: number;
-	showTechnologiesCount: boolean;
-	showPracticesCount: boolean;
-	maxZoomOutFactor: number;
-	startTechPractsRandomPosition: boolean;
+	nodeSize?: number;
+	startTechPractsRandomPosition?: boolean;
+	maxZoomOutFactor?: number;
+	rainbowStrokes?: boolean;
+
+	linkStrokeWidth?: number;
+
+	projectStrokeWidth?: number;
+	projectStrokeColor?: string;
+	projectBackgroundColor?: string;
+	projectTextColor?: string;
+	projectEachOtherDistance?: number;
+  projectMinRadius?: number;
+	projectShowTechnologiesCount?: boolean;
+	projectShowPracticesCount?: boolean;
+
+	technologyStrokeWidth?: number;
+	technologyStrokeColor?: string;
+	technologyBackgroundColor?: string;
+	technologyNameColor?: string,
+	technologyCounterColor?: string,
+	practiceStrokeColor?: string,
+
+	practiceStrokeWidth?: number,
+	practiceBackgroundColor?: string,
+	practiceNameColor?: string,
+	practiceCounterColor?: string,
 }
 
-export function renderMap(projects: InputProject[], opts: ProjectMapOptions) {
+export function renderMap(projects: InputProject[], inOpts: ProjectMapOptions) {
+  const opts = Object.assign({}, defaultOptions, inOpts)
+
   // Prepare data
 
   let id = 0;
@@ -74,6 +111,8 @@ export function renderMap(projects: InputProject[], opts: ProjectMapOptions) {
   technologyNodes.map(x => technologyIdMapper[x.technologyId] = x.id);
   practiceNodes.map(x => practicesIdMapper[x.practiceId] = x.id);
 
+  const projectRadius = Math.max(opts.projectMinRadius, opts.projectEachOtherDistance * projects.length / 2 * Math.PI);
+
   const nodes = 
     technologyNodes.map(n => Object.assign(n, {
       x: opts.startTechPractsRandomPosition ? seedRand(n.technologyId.toString()) * 100 : 0,
@@ -84,8 +123,8 @@ export function renderMap(projects: InputProject[], opts: ProjectMapOptions) {
       y: opts.startTechPractsRandomPosition ? seedRand((-n.practiceId).toString()) * 100 : 0,
     }) as Node)).concat(
     projectNodes.map((n, i) => Object.assign(n, {
-      fx: (projectNodes.length === 1 ? 0 : Math.cos((i / projectNodes.length) * 2 * Math.PI)) * opts.projectsPosRadius,
-      fy: (projectNodes.length === 1 ? 0 : Math.sin((i / projectNodes.length) * 2 * Math.PI)) * opts.projectsPosRadius,
+      fx: (projectNodes.length === 1 ? 0 : Math.cos((i / projectNodes.length) * 2 * Math.PI)) * projectRadius,
+      fy: (projectNodes.length === 1 ? 0 : Math.sin((i / projectNodes.length) * 2 * Math.PI)) * projectRadius,
     }) as Node));
   
   const links = projects
@@ -132,9 +171,14 @@ export function renderMap(projects: InputProject[], opts: ProjectMapOptions) {
   .selectChildren()
   .remove();
 
-  const tooltip = appendTooltip(container);
+  const content = container
+  .append('div')
+    .style('position', 'relative')
+    .style('overflow', 'hidden');
 
-  const maxZoomOut = opts.projectsPosRadius * 2 * opts.maxZoomOutFactor;
+  const tooltip = appendTooltip(content);
+
+  const maxZoomOut = projectRadius * 2 * opts.maxZoomOutFactor;
   const zoom = d3
   .zoom()
   .scaleExtent([0.5, 40])
@@ -144,17 +188,17 @@ export function renderMap(projects: InputProject[], opts: ProjectMapOptions) {
   ])
   .on('zoom', ({transform}) => g.attr('transform', transform));
   
-  const svg = container
+  const svg = content
   .append('svg')
-    .attr('width', '100%')
-    .attr('height', '100%')
     .attr('viewBox', `0 0 ${maxZoomOut} ${maxZoomOut}`)
+    .style('width', '100%')
+    .style('height', '100%');
 
   const g = svg
   .append('g')
     .attr('cursor', 'grab')
 
-  zoom.transform(svg as any, d3.zoomIdentity.translate(opts.projectsPosRadius*opts.maxZoomOutFactor, opts.projectsPosRadius*opts.maxZoomOutFactor));
+  zoom.transform(svg as any, d3.zoomIdentity.translate(projectRadius * opts.maxZoomOutFactor, projectRadius * opts.maxZoomOutFactor));
   svg.call(zoom as any);
 
   const linksNode = g
