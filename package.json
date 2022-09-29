@@ -1,11 +1,13 @@
 {
   "name": "tech-map-d3",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Biblioteca para visualizar a relação de tecnologias, práticas e projetos em uma mapa interativo usando d3.js",
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "cross-env NODE_ENV=production webpack"
+    "build": "cross-env NODE_ENV=production webpack",
+    "build:lib": "cross-env NODE_ENV=production tsc -p tsconfig.lib.json"
   },
+  "main": "map.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/agespucrs/tech-map-d3.git"

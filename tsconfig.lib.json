@@ -1,0 +1,16 @@
+{
+  "include": [
+    "src/d3/**/*"
+  ],
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "outDir": "build",
+    "declaration": true
+  }
+}
